@@ -1,4 +1,4 @@
-# Nightmare-Forest
+# Nightmare Forest
 
 Copyright (c) 2025 Vyndral Game Studios
 All rights reserved.
