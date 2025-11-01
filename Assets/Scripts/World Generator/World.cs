@@ -1,11 +1,15 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class World : MonoBehaviour {
 
-    // Refrences to stuff
+    [Header("World Terrain Values")]
     public Material material;
+    public Foliage[] plants;
+
+    [Header("Outside Refrences")]
     public Transform player;
 
     private Stack<Vector2Int> chunksToCreate = new Stack<Vector2Int>();
@@ -81,11 +85,15 @@ public class World : MonoBehaviour {
                 Vector2Int pos = new Vector2Int(x, z);
                 // If we have already made this chunk and its not active then make it active 
                 // (we dont have to check if we should make it active because we're in this loop)
-                if (chunks.ContainsKey(pos) && !chunks[pos].isActive)
-                    chunks[pos].isActive = true;
-                    //chunks[pos].chunk.SetActive(true);
-                else  // Else add it to the chunks to create list for later
-                    chunksToCreate.Push(new Vector2Int(x, z)); 
+                if (chunks.ContainsKey(pos)) {
+                    // If chunk exists, just make it active if needed
+                    if (!chunks[pos].isActive)
+                        chunks[pos].isActive = true;
+                } else {
+                    // Only queue if we don't already plan to create it
+                    if (!chunksToCreate.Contains(pos))
+                        chunksToCreate.Push(pos);
+                }
             }
         }
 
@@ -121,14 +129,46 @@ public class World : MonoBehaviour {
                 continue;
             }
 
+            // Create our chunk object and add it to the list
             Chunk chunk = new Chunk(new Vector2Int(chunkPos.x, chunkPos.y), material);
+            chunk.isActive = false; // Set it to false so we don't run any scripts prematurly
             chunks.Add(chunkPos, chunk);
+
+            // This is our tree generator
+            foreach (Foliage plant in plants) {
+                
+                // Get the plants amount so we know how many of THESE typs of trees are going to be in the chunk
+                int plantsAmount = Random.Range(0, plant.maxPerChunk);
+
+                // All the stuff we have to do to place a tree
+                for (int i = 0; i < plantsAmount; i++) {
+
+                    // Create a new tree at 0, 0, 0 (positional calculations is done later)
+                    GameObject plantObj = Instantiate(plant.plantObject, new Vector3Int(0, 0, 0), Quaternion.identity);
+
+                    // Set it as a chunk child, just some inspector stuff
+                    plantObj.transform.SetParent(chunk.chunk.transform);
+
+                    // Add our tree placement calculator
+                    TreePlacementGenerator tpg = plantObj.AddComponent<TreePlacementGenerator>();
+
+                    // Variables we have to set here for the Tree Placement Generator
+                    tpg.chunk = chunk;
+                    tpg.height = plant.height;
+                    tpg.type = plant.type;
+                }
+            }
+
+            // Set the chunk to active and wait for the next frame
+            chunk.isActive = true;
             yield return null;
         }
-
+        
+        // When we're dont creating chunks, we just stop creating them
         isCreatingChunks = false;
     }
 }
+
 
 /*~~~ NOTED BUGS: ~~~*/
 // We keep adding the same chunk to chunksToCreate somewhere in GenerateWorld or CheckViewDistance

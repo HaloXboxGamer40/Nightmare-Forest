@@ -243,7 +243,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86359c97d9a4437d9c490999ecd749d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: be1e6179226964230a16c15453643b0a, type: 2}
+  material: {fileID: 2100000, guid: d3b9395e1f76a4df2951cc8e489e6d7d, type: 2}
+  plants:
+  - {fileID: 11400000, guid: 2a76613601f134595a73414d325e14af, type: 2}
   player: {fileID: 588851250}
 --- !u!4 &1376411177
 Transform:
@@ -401,7 +403,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1

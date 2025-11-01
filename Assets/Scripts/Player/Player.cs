@@ -95,6 +95,7 @@ public class Player : MonoBehaviour {
         // Check if we are grounded now using the RaycastDistance property.
         bool isGroundedNow = Physics.Raycast(RaycastOrigin, Vector3.down, RaycastDistance);
 
+        // If we aren't already grounded if we aren't in the air then we will tell that we're grounded
         if (isGroundedNow && !isGrounded)
             Grounded?.Invoke();
 
@@ -103,17 +104,22 @@ public class Player : MonoBehaviour {
 
     // Move the player and check if we need to sprint
     private void MovePlayer() {
+        // Check if we're running
         IsRunning = canRun && Input.GetKey(KeyCode.LeftShift);
 
+        // If we're running then we will override our speed to go faster
         float targetMovingSpeed = IsRunning ? runSpeed : speed;
         if (speedOverrides.Count > 0)
             targetMovingSpeed = speedOverrides[speedOverrides.Count - 1]();
 
+        // Get inputs for wasd and arrow keys
         Vector3 localInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
+        // Now we calculate our local and world movements
         Vector3 localMove = localInput * targetMovingSpeed;
         Vector3 worldMove = transform.TransformDirection(localMove);
 
+        // Update our position
         rb.MovePosition(rb.position + worldMove * Time.fixedDeltaTime);
     }
 

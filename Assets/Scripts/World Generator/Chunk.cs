@@ -1,12 +1,16 @@
-using System.Collections;
+//using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class Chunk {
 
     // Mesh data stuff
     List<Vector3> verts = new List<Vector3>();
     List<Vector2> uvs = new List<Vector2>();
     List<int> triangles = new List<int>();
+
+    // Keep track of plants in our chunk
+    public List<Vector2Int> plants = new List<Vector2Int>();
 
     // Without these refrences we wouldn't be able to generate a mesh
     MeshFilter meshFilter;
@@ -17,6 +21,7 @@ public class Chunk {
     public GameObject chunk;
 
     // Keep track of where we are in the world and our material
+    public Vector2Int chunkCenter;
     Vector2Int chunkCoord;
     Material material;
 
@@ -57,7 +62,8 @@ public class Chunk {
         chunkCoord = position;
         offset = (chunkCoord.x * chunkCoord.y) * GameData.ChunkWidth;
 
-        chunk.transform.position = new Vector3Int(position.x * ChunkSize, 0, position.y * ChunkSize);
+        chunkCenter = new Vector2Int(position.x * ChunkSize, position.y * ChunkSize);
+        chunk.transform.position = new Vector3Int(chunkCenter.x, 0, chunkCenter.y);
 
         // Generate Chunk and create the mesh
         GenerateChunk();
