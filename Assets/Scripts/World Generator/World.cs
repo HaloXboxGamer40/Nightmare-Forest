@@ -8,7 +8,7 @@ public class World : MonoBehaviour {
     public Material material;
     public Transform player;
 
-    private Queue<Vector2Int> chunksToCreate = new Queue<Vector2Int>();
+    private Stack<Vector2Int> chunksToCreate = new Stack<Vector2Int>();
     private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
     private List<Vector2Int> previouslyActiveChunks = new List<Vector2Int>();
@@ -62,7 +62,7 @@ public class World : MonoBehaviour {
         for (int x = playerPosition.x - GameData.ViewDistance; x < playerPosition.x + GameData.ViewDistance; x++) {
             for (int z = playerPosition.y - GameData.ViewDistance; z < playerPosition.y + GameData.ViewDistance; z++) {
                 // Using Queues bc they're faster for what we're doing
-                chunksToCreate.Enqueue(new Vector2Int(x, z));
+                chunksToCreate.Push(new Vector2Int(x, z));
                 previouslyActiveChunks.Add(new Vector2Int(x, z)); // Also we gotta keep track of this chunk so we can see if we need to unload it later
             }
         }
@@ -81,22 +81,20 @@ public class World : MonoBehaviour {
                 Vector2Int pos = new Vector2Int(x, z);
                 // If we have already made this chunk and its not active then make it active 
                 // (we dont have to check if we should make it active because we're in this loop)
-                if (chunks.ContainsKey(pos) && !chunks[pos].isActive) {
+                if (chunks.ContainsKey(pos) && !chunks[pos].isActive)
                     chunks[pos].isActive = true;
-                    chunks[pos].chunk.SetActive(true);
-                } else { // Else add it to the chunks to create list for later
-                    chunksToCreate.Enqueue(new Vector2Int(x, z));
-                }   
+                    //chunks[pos].chunk.SetActive(true);
+                else  // Else add it to the chunks to create list for later
+                    chunksToCreate.Push(new Vector2Int(x, z)); 
             }
         }
 
         // now we're going through our old chunks to see if we need to keep them or not
         foreach (Vector2Int chunkPos in previouslyActiveChunks) {
             // If we don't need their position loaded, we can just unload it
-            if (!activeChunks.Contains(chunkPos)) {
+            if (!activeChunks.Contains(chunkPos))
                 chunks[chunkPos].isActive = false;
-                chunks[chunkPos].chunk.SetActive(false);
-            }
+                //chunks[chunkPos].chunk.SetActive(false);
         }
 
         // Set our old activeChunks list to the previouslyActiveChunks and clear activeChunks.
@@ -114,7 +112,7 @@ public class World : MonoBehaviour {
         // on loading/generating chunks.
         while (chunksToCreate.Count > 0) {
 
-            Vector2Int chunkPos = chunksToCreate.Dequeue();
+            Vector2Int chunkPos = chunksToCreate.Pop();
             
             // If we have already made this chunk, then we don't need to worry about it and 
             // we can wait for the next frame.
@@ -135,4 +133,3 @@ public class World : MonoBehaviour {
 /*~~~ NOTED BUGS: ~~~*/
 // We keep adding the same chunk to chunksToCreate somewhere in GenerateWorld or CheckViewDistance
 // Notcing how we try to activate chunks that aren't in the Dictionary
-// Sometimes chunk loading will stop when you move in the other direction and pickup again later, probably should switch out a Queue for a Stack

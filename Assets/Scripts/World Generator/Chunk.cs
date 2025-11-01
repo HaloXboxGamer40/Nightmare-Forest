@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Chunk {
 
-    public bool isActive; // We need to know if we're active or not
-
     // Mesh data stuff
     List<Vector3> verts = new List<Vector3>();
     List<Vector2> uvs = new List<Vector2>();
@@ -13,7 +11,8 @@ public class Chunk {
     // Without these refrences we wouldn't be able to generate a mesh
     MeshFilter meshFilter;
     MeshRenderer meshRenderer;
-
+    MeshCollider meshCollider;
+ 
     // ChunkObject refrence, MUST be public
     public GameObject chunk;
 
@@ -26,9 +25,21 @@ public class Chunk {
 
     // Generation values I probably should store in GameData
     float scale = 0.1f;
-    float heightMultiplier = 5f;
+    float heightMultiplier = 1f;
 
     float offset;
+    bool _isActive;
+
+    // We need to know if we're active or not
+    public bool isActive {
+
+        get { return _isActive; }
+        set {
+            _isActive = value;
+            chunk.SetActive(value);
+        }
+
+    }
 
     public Chunk(Vector2Int position, Material material) {
         
@@ -38,6 +49,8 @@ public class Chunk {
         meshFilter = chunk.AddComponent<MeshFilter>();
         meshRenderer = chunk.AddComponent<MeshRenderer>();
         chunk.name = "Chunk: (" + position.x + ", " + position.y + ")";
+        meshCollider = chunk.AddComponent<MeshCollider>();
+
         chunk.transform.SetParent(World.Instance.transform);
 
         // Sets up position data
@@ -49,6 +62,8 @@ public class Chunk {
         // Generate Chunk and create the mesh
         GenerateChunk();
         CreateMesh();
+
+        meshCollider.sharedMesh = meshFilter.mesh;
     }
     
     private void GenerateChunk() {
@@ -78,7 +93,7 @@ public class Chunk {
             for (int z = 0; z < ChunkSize; z++) {
                 
                 // Think of the vertices on a square
-                int bottomL = z * vertPerLine + x; // Bottom Left
+                int bottomL = x * vertPerLine + z; // Bottom Left
                 int bottomR = bottomL + 1; // Bottom Right
                 int topL = bottomL + vertPerLine; // Top Left
                 int topR = topL + 1; // Top Right
