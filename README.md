@@ -1,5 +1,4 @@
 # Nightmare-Forest
-This is our first game!
 
 Copyright (c) 2025 Vyndral Game Studios
 All rights reserved.
