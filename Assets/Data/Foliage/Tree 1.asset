@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b35b26c9ed4244676a80ebfa841dfcb6, type: 3}
   m_Name: Tree 1
   m_EditorClassIdentifier: 
-  type: Tree
-  plantObject: {fileID: 163275208696182755, guid: 482a9dd37444e4a14945997e9c31c9ab, type: 3}
+  type: Tree 1
+  plantObject: {fileID: 114418, guid: be878d9ea17907f4a8068678a5ce7908, type: 3}
   hasCollider: 1
-  height: 10
+  height: 1
   maxPerChunk: 2
