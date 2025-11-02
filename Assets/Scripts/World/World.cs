@@ -75,6 +75,8 @@ public class World : MonoBehaviour {
     // This is the thing that creates/loads/unloads chunks
     private void CheckViewDistance() {
 
+        activeChunks.Clear();
+
         for (int x = lastPlayerPos.x - GameData.ViewDistance; x < lastPlayerPos.x + GameData.ViewDistance; x++) {
             for (int z = lastPlayerPos.y - GameData.ViewDistance; z < lastPlayerPos.y + GameData.ViewDistance; z++) {
                 
@@ -107,7 +109,6 @@ public class World : MonoBehaviour {
 
         // Set our old activeChunks list to the previouslyActiveChunks and clear activeChunks.
         previouslyActiveChunks = new List<Vector2Int>(activeChunks);
-        activeChunks.Clear();
     }
 
     IEnumerator CreateChunks() {

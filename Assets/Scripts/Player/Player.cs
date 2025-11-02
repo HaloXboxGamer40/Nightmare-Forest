@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
     [Header("Movement")]
     public bool canRun = true;
     public bool IsRunning { get; private set; }
+    public bool IsWalking;
     public float runSpeed = 9f;
     public float speed = 5f;
 
@@ -102,7 +103,6 @@ public class Player : MonoBehaviour {
         isGrounded = isGroundedNow;
     }
 
-    // Move the player and check if we need to sprint
     private void MovePlayer() {
         // Check if we're running
         IsRunning = canRun && Input.GetKey(KeyCode.LeftShift);
@@ -119,9 +119,13 @@ public class Player : MonoBehaviour {
         Vector3 localMove = localInput * targetMovingSpeed;
         Vector3 worldMove = transform.TransformDirection(localMove);
 
+        // IsWalking = true when the player has movement input and is NOT running
+        IsWalking = !IsRunning && localInput.sqrMagnitude > 0.0001f;
+
         // Update our position
         rb.MovePosition(rb.position + worldMove * Time.fixedDeltaTime);
     }
+
 
     // Move camera
     private void UpdateCamera() {

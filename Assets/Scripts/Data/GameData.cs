@@ -9,7 +9,7 @@ public static class GameData {
     public static readonly int ChunkWidth = 16;
 
     public static readonly float WorldScale = 0.1f;
-    public static readonly int ViewDistance = 8;
+    public static readonly int ViewDistance = 4;
     public static readonly int WorldSize = 6000;
 
 }
