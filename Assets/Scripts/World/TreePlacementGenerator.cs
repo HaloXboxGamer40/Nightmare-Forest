@@ -10,9 +10,9 @@ public class TreePlacementGenerator : MonoBehaviour {
     // Public variables, set by World when we initialize this component
     public Chunk chunk;
     public int height;
-    public string type;
+    public byte type;
 
-    private void Start() {
+    public void PlaceTree(ChunkData chunkData) {
 
         // Random position from -8 to 8 (chunks centers are 0, 0 so -8 would be on the chunk boarder)
         int x = Random.Range(-GameData.ChunkWidth / 2, GameData.ChunkWidth / 2);
@@ -28,6 +28,9 @@ public class TreePlacementGenerator : MonoBehaviour {
             // Add our position to the list and name ourselves
             chunk.plants.Add(new Vector2Int(x, z));
             gameObject.name = name + ": (" + position.x + ", " + position.y + ")";
+
+            PlantData plant = new PlantData(position.x, position.z, type);
+            chunkData.AddPlant(plant);
 
             // Destroy this component since we don't need it anymore
             Destroy(this);

@@ -31,6 +31,9 @@ public class Player : MonoBehaviour {
 
     public event System.Action Grounded;
 
+    // Player Pos, this is cached so we can fix a bug
+    Vector3 playerPos;
+
     // Extra ground check stuff
     const float OriginOffset = .001f;
     Vector3 RaycastOrigin => transform.position + Vector3.up * OriginOffset;
@@ -52,6 +55,7 @@ public class Player : MonoBehaviour {
     // Set our rigidbody
     private void Awake() {
         rb = GetComponent<Rigidbody>();
+        playerPos = new Vector3(0, 0, 0);
     }
 
     private void Start() {
@@ -70,6 +74,7 @@ public class Player : MonoBehaviour {
         
         // Move the camera
         UpdateCamera();
+        //FixedPlayerPositionCalculation();
 
     }
 
@@ -78,6 +83,19 @@ public class Player : MonoBehaviour {
         // Ground check MUST be first
         GroundCheck();
         Jump();
+
+    }
+
+    private void FixedPlayerPositionCalculation() {
+
+        // Gaurdian clause so we don't do all of this every frame
+        if (transform.position.Equals(playerPos))
+            return;
+        
+        if (!isGrounded)
+            return;
+        
+        transform.position = playerPos;
 
     }
 
@@ -124,6 +142,9 @@ public class Player : MonoBehaviour {
 
         // Update our position
         rb.MovePosition(rb.position + worldMove * Time.fixedDeltaTime);
+
+        if (IsWalking || IsRunning)
+            playerPos = transform.position;
     }
 
 

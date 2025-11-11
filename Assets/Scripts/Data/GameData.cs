@@ -8,8 +8,18 @@ public static class GameData {
     // Chunk data
     public static readonly int ChunkWidth = 16;
 
+    // Generation data
     public static readonly float WorldScale = 0.1f;
+
+    // World data
     public static readonly int ViewDistance = 4;
     public static readonly int WorldSize = 6000;
+
+    // Cross-Scene variables
+    public static int level = 0;
+    public static int currentSave = 1;
+    
+    // Settings
+    public static bool debugMode = true;
 
 }
