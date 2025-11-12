@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class World : MonoBehaviour {
 
@@ -93,6 +94,12 @@ public class World : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.F1)) {
             saveData.UpdatePlayerPosition(player, cam);
             SaveSystem.SaveGame(saveData);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            saveData.UpdatePlayerPosition(player, cam);
+            SaveSystem.SaveGame(saveData);
+            SceneManager.LoadScene("Main Menu");
         }
 
     }
