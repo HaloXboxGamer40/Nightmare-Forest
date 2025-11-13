@@ -19,6 +19,7 @@ public class SettingsMenu : MonoBehaviour {
     public Toggle debugToggle;
     public CycleButton textureQuality;
     public CycleButton resolutionsCycle;
+    public Toggle fogToggle;
 
     [Header("Textures")]
     public TextureSizes[] textures;
@@ -65,9 +66,7 @@ public class SettingsMenu : MonoBehaviour {
         debugToggle.isOn = settings.debugMode;
         textureQuality.selectedOption = (int)settings.textures;
         resolutionsCycle.selectedOption = settings.currentResolution;
-
-        UpdateTextures(textureQuality.selectedOption);
-        SetResolution(resolutionsCycle.selectedOption);
+        fogToggle.isOn = settings.fog;
 
     }
 
@@ -76,9 +75,12 @@ public class SettingsMenu : MonoBehaviour {
         settings.debugMode = debugToggle.isOn;
         settings.textures = (TextureQuality)textureQuality.selectedOption;
         settings.currentResolution = resolutionsCycle.selectedOption;
+        settings.fog = fogToggle.isOn;
 
         UpdateTextures(textureQuality.selectedOption);
-        SetResolution(resolutionsCycle.selectedOption);
+        UpdateResolution();
+
+        RenderSettings.fog = settings.fog;
 
         string jsonExport = JsonUtility.ToJson(settings);
         File.WriteAllText(path + "/settings.json", jsonExport);
@@ -94,6 +96,12 @@ public class SettingsMenu : MonoBehaviour {
         //forestFloor.SetTexture("_BumpMap", textures[1].ReturnTexture(qualityLevel));
         forestFloor.SetTexture("_ParallaxMap", textures[2].ReturnTexture(qualityLevel));
         forestFloor.SetTexture("_OcclusionMap", textures[0].ReturnTexture(qualityLevel));
+
+    }
+
+    public void UpdateResolution() {
+
+        SetResolution(resolutionsCycle.selectedOption);
 
     }
 

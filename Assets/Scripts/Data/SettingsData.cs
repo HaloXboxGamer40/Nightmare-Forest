@@ -11,6 +11,7 @@ public class SettingsData {
     // Performance
     public TextureQuality textures;
     public int currentResolution;
+    public bool fog;
 
     public SettingsData() {
 
@@ -18,6 +19,7 @@ public class SettingsData {
 
         textures = TextureQuality.Medium;
         currentResolution = 3;
+        fog = true;
 
     }
 

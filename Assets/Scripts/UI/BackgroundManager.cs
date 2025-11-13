@@ -18,10 +18,10 @@ public class BackgroundManager : MonoBehaviour {
 
     }
 
-    public void SetBackground(int id, bool animate, GameObject menu1 = null, GameObject menu2 = null) {
+    public void SetBackground(int id, bool animate, GameObject menu1 = null, GameObject menu2 = null, GameObject menu3 = null, GameObject menu4 = null) {
 
         if (animate) {
-            StartCoroutine(AnimatedBackground(id, menu1, menu2));
+            StartCoroutine(AnimatedBackground(id, menu1, menu2, menu3, menu4));
             return;
         }
 
@@ -29,14 +29,17 @@ public class BackgroundManager : MonoBehaviour {
 
     }
 
-    IEnumerator AnimatedBackground(int id, GameObject menu1, GameObject menu2) {
+    IEnumerator AnimatedBackground(int id, GameObject menu1, GameObject menu2, GameObject menu3, GameObject menu4) {
         bgOverlay.SetActive(true);
         animator.Play("Switch Background", 0, 0f);
 
         yield return new WaitForSeconds(1f);
         imageBackground.sprite = backgrounds[id];
-        menu1.SetActive(false);
-        menu2.SetActive(true);
+
+        if (menu1 != null) menu1.SetActive(false);
+        if (menu2 != null) menu2.SetActive(true);
+        if (menu3 != null) menu3.SetActive(false);
+        if (menu4 != null) menu4.SetActive(false);
 
         yield return new WaitForSeconds(1f);
         bgOverlay.SetActive(false);

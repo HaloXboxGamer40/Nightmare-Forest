@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class LevelMenu : MonoBehaviour {
 
@@ -19,6 +20,26 @@ public class LevelMenu : MonoBehaviour {
     [Header("Menus")]
     public GameObject mainMenu;
     public GameObject levelMenu;
+
+    public void RefreshLevels() {
+
+        foreach(GameObject level in levels) {
+            level.SetActive(false);
+        }
+        
+        if (!Directory.Exists(Application.persistentDataPath + "/saves/Save" + GameData.currentSave + "/")) {
+            levels[0].SetActive(true);
+            Directory.CreateDirectory(Application.persistentDataPath + "/saves/Save" + GameData.currentSave + "/");
+        } else {
+            for (int i = 1; i <= 10; i++) {
+                if (File.Exists(Application.persistentDataPath + "/saves/Save" + GameData.currentSave + "/Level" + i + ".umu"))
+                    levels[i - 1].SetActive(true);
+                else
+                    break;
+            }
+        }
+
+    }
 
     private void Update() {
         bool hovered = false;
